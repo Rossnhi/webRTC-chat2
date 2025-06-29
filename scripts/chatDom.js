@@ -24,3 +24,29 @@ function displayMessage(message, name,  style) {
     chatWindow.appendChild(li);
 }
 
+chatWindow.innerHTML += "<button id='test'>test</button>"
+let testBut = document.getElementById("test")
+testBut.addEventListener("click", sendOtherMessage)
+
+let notif = document.getElementById("newMessageNotif")
+function sendOtherMessage() {
+    displayMessage("how about this?", "Susu", "message other");
+    handleNewMessageNotif();
+
+}
+
+chatWindow.addEventListener("scroll", hideNotifIfScrolled)
+function handleNewMessageNotif() {
+    if (chatWindow.scrollTop + chatWindow.clientHeight < chatWindow.scrollHeight) {
+        notif.style.transform = "scale(1)";
+    }
+
+    if (chatWindow.scrollTop + chatWindow.clientHeight >= 0.9 * chatWindow.scrollHeight) {
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+}
+function hideNotifIfScrolled() {
+    if (chatWindow.scrollTop + chatWindow.clientHeight >= chatWindow.scrollHeight) {
+        notif.style.transform = "scale(0)";
+    }
+}

@@ -130,4 +130,6 @@ input:focus {
     position: sticky;
     z-index: 5;
     top: calc(100% - 20px); 
+    transform: scale(0);
+    transition: transform 0.25s;
 }
