@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Double:wght@100..900&display=swap" rel="stylesheet">
+    <title>Chat App</title>
+</head>
+<body>
+    <h1>Chat</h1>
+    <ul id = "chatWindow">
+        <li class="message other"><span class="sender">Them: </span><span class="timeStamp">10:54am</span>Hey</li>
+        <li class="message other"><span class="sender">Them: </span><span class="timeStamp">10:54am</span>Hello</li>
+        <li class="message other"><span class="sender">Them: </span><span class="timeStamp">10:54am</span>How are you??</li>
+        <li id = "newMessageNotif">&#9660;</li>
+    </ul>
+    <form id="chatForm">
+        <input type="text" id="messageBox" placeholder="Enter message...">
+        <button type="submit">Send</button>
+    </form>
+
+    <script src = "/scripts/chatDom.js" ></script>
+</body>
+</html>

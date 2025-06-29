@@ -1,0 +1,133 @@
+* {
+    text-align: center;
+    font-family: "Bitcount Grid Double", system-ui;
+    color: #FFECCC;
+    box-sizing: border-box;
+    vertical-align: top;
+}
+
+body {
+    background-color: #5d1e1e;
+}
+
+h1 {
+    font-size: 56px;
+    font-weight: 500;
+}
+
+button {
+    width: 100px;
+    height: 40px;
+    color: #FF9587;
+    background-color: #BA487F;
+    border: 1px solid  #FF9587;
+    border-radius: 10px;
+    font-size: 26px;
+}
+
+button:hover {
+    color: #BA487F;
+    background-color: #FF9587;
+    border: 1px solid  #FF9587;
+}
+
+button:active {
+    border: 3px solid  #BA487F;
+
+}
+
+input {
+    width: 350px;
+    height: 40px;
+    margin: 0px 20px;
+    background-color: #722323;
+    border-radius: 10px;
+    border: 1px solid #FF9587;
+    font-size: 20px;
+}
+
+input:focus {
+    outline: none;
+}
+
+#chatWindow {
+    background-color: #722323;
+    padding: 10px 20px;
+    border-radius: 10px;
+    min-height: 300px;
+    max-height: 500px;
+    position: relative;
+    overflow: scroll;
+}
+
+.message {
+    list-style: none;
+    width: fit-content;
+    min-width: 150px;
+    height: 45px;
+    padding: 10px;
+    margin: 10px 0px;
+    border: 1px solid #FF9587;
+    border-radius: 10px;
+    text-align: left;
+    position: relative;
+}
+
+.self {
+    background-color: #FFECCC;
+    color: #5d1e1e;
+    border-radius: 10px 10px 0px 10px;
+    left: 100%;
+    transform: translate(-100%);
+    animation: popin-self 0.2s 1 normal;
+}
+
+@keyframes popin-self {
+    0% {
+        transform: translate(-100%) scale(0);
+    }
+    100% {
+        transform: translate(-100%) scale(1);
+    }
+}
+
+.other {
+    border-radius: 10px 10px 10px 0px;
+    background-color: #5d1e1e;
+    animation: popin-other 0.2s 1 normal;
+
+}
+
+@keyframes popin-other {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.sender {
+    color: #BA487F;
+}
+
+.timeStamp {
+    color: #BA487F;
+    position: absolute;
+    right: 5px;
+    bottom: 0px;
+    margin-bottom: 0px;
+    font-size: 13px;
+}
+
+#newMessageNotif {
+    list-style: none;
+    height: 20px;
+    width: 20px;
+    background-color: #BA487F;
+    border-radius: 50%;
+    border: 1px solid #FF9587;
+    position: sticky;
+    z-index: 5;
+    top: calc(100% - 20px); 
+}
