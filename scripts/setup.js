@@ -8,10 +8,10 @@ let nameInp = document.getElementById("name");
 function joinRoom() {
     if (nameInp.value.trim() != "") {
         window.name = nameInp.value.trim();
-        window.location.href = "/chat.html";
+        window.location.href = "chat.html";
     }
     else {
-        alert("Enter your name first!");
+        alert("Enter your name and room code first!");
     }
 }
 
@@ -20,3 +20,4 @@ function hostRoom() {
 
     }
 }
+
