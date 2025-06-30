@@ -6,15 +6,13 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Double:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
     <title>Chat App</title>
 </head>
 <body>
     <h1>Chat</h1>
+    <div id="statusIndicator"></div>
     <ul id = "chatWindow">
-        <li class="message other"><span class="sender">Them: </span><span class="timeStamp">10:54am</span>Hey</li>
-        <li class="message other"><span class="sender">Them: </span><span class="timeStamp">10:54am</span>Hello</li>
-        <li class="message other"><span class="sender">Them: </span><span class="timeStamp">10:54am</span>How are you??</li>
         <li id = "newMessageNotif">&#9660;</li>
     </ul>
     <form id="chatForm">
@@ -23,5 +21,6 @@
     </form>
 
     <script src = "/scripts/chatDom.js" ></script>
+    <script src ="scripts/rtc.js"></script>
 </body>
 </html>
