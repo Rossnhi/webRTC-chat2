@@ -1,49 +1,62 @@
+:root {
+    --primary-color-1 : #5d1e1e;
+    --primary-color-2 : #722323;
+    --secondary-color : #FFECCC;;
+    --accent-color-1 : #BA487F;
+    --accent-color-2 : #FF9587;
+}
+
 * {
     text-align: center;
-    font-family: "Bitcount Grid Double", system-ui;
-    color: #FFECCC;
+    font-family: "Special Elite", system-ui;
+    color: var(--secondary-color);
     box-sizing: border-box;
     vertical-align: top;
 }
 
 body {
-    background-color: #5d1e1e;
+    background-color: var(--primary-color-1);
 }
 
 h1 {
     font-size: 56px;
     font-weight: 500;
+    margin: 20px;
 }
 
 button {
     width: 100px;
     height: 40px;
-    color: #FF9587;
-    background-color: #BA487F;
-    border: 1px solid  #FF9587;
+    color: var(--accent-color-2);
+    background-color: var(--accent-color-1);
+    border: 1px solid  var(--accent-color-2);
     border-radius: 10px;
     font-size: 26px;
 }
 
 button:hover {
-    color: #BA487F;
-    background-color: #FF9587;
-    border: 1px solid  #FF9587;
+    color: var(--accent-color-1);
+    background-color: var(--accent-color-2);
+    border: 1px solid  var(--accent-color-2);
 }
 
 button:active {
-    border: 3px solid  #BA487F;
+    border: 3px solid  var(--accent-color-1);
 
 }
 
 input {
-    width: 350px;
+    width: 200px;
     height: 40px;
     margin: 0px 20px;
-    background-color: #722323;
+    background-color: var(--primary-color-2);
     border-radius: 10px;
-    border: 1px solid #FF9587;
+    border: 1px solid var(--accent-color-2);
     font-size: 20px;
+}
+
+#messageBox {
+    width: 350px;
 }
 
 input:focus {
@@ -51,7 +64,7 @@ input:focus {
 }
 
 #chatWindow {
-    background-color: #722323;
+    background-color: var(--primary-color-2);
     padding: 10px 20px;
     border-radius: 10px;
     min-height: 300px;
@@ -67,15 +80,15 @@ input:focus {
     height: 45px;
     padding: 10px;
     margin: 10px 0px;
-    border: 1px solid #FF9587;
+    border: 1px solid var(--accent-color-2);
     border-radius: 10px;
     text-align: left;
     position: relative;
 }
 
 .self {
-    background-color: #FFECCC;
-    color: #5d1e1e;
+    background-color: var(--secondary-color);
+    color: var(--primary-color-1);
     border-radius: 10px 10px 0px 10px;
     left: 100%;
     transform: translate(-100%);
@@ -93,7 +106,7 @@ input:focus {
 
 .other {
     border-radius: 10px 10px 10px 0px;
-    background-color: #5d1e1e;
+    background-color: var(--primary-color-1);
     animation: popin-other 0.2s 1 normal;
 
 }
@@ -108,11 +121,12 @@ input:focus {
 }
 
 .sender {
-    color: #BA487F;
+    color: var(--accent-color-1);
+    margin: 0px 5px;
 }
 
 .timeStamp {
-    color: #BA487F;
+    color: var(--accent-color-1);
     position: absolute;
     right: 5px;
     bottom: 0px;
@@ -124,12 +138,44 @@ input:focus {
     list-style: none;
     height: 20px;
     width: 20px;
-    background-color: #BA487F;
+    background-color: var(--accent-color-1);
     border-radius: 50%;
-    border: 1px solid #FF9587;
+    border: 1px solid var(--accent-color-2);
     position: sticky;
     z-index: 5;
     top: calc(100% - 20px); 
     transform: scale(0);
     transition: transform 0.25s;
+}
+
+.container {
+    width: 330px;
+    background-color: #fff3;
+    padding: 20px;
+    border-radius: 20px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
+    font-size: 25px;
+}
+
+.container button {
+    margin: 10px;
+}
+
+.container p {
+    color: var(--accent-color-2);
+    font-size: 33px;
+}
+
+#statusIndicator {
+    height: 20px;
+    width: 20px;
+    background-color: rgb(92, 92, 92);
+    position: absolute;
+    top: 40px;
+    right: 100px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-color-1);
 }
