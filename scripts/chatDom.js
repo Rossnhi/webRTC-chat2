@@ -1,3 +1,5 @@
+window.messages = [];
+
 let form = document.getElementById('chatForm');
 let messageBox = document.getElementById("messageBox");
 form.addEventListener("submit", sendMessage);
@@ -7,7 +9,9 @@ let chatWindow = document.getElementById("chatWindow")
 function sendMessage(e) {
     e.preventDefault(); // Prevent page reload
     if (messageBox.value.trim() != "") {
+        window.messages.push({name: window.name, message: messageBox.value})
         displayMessage(messageBox.value, window.name, "message self");
+        sendToPeer(JSON.stringify({name: window.name, message: messageBox.value}));
     }
     messageBox.value = "";
     chatWindow.scrollTop = chatWindow.scrollHeight
@@ -24,17 +28,16 @@ function displayMessage(message, name,  style) {
     chatWindow.appendChild(li);
 }
 
-chatWindow.innerHTML += "<button id='test'>test</button>"
-let testBut = document.getElementById("test")
-testBut.addEventListener("click", sendOtherMessage)
+// chatWindow.innerHTML += "<button id='test'>test</button>"
+// let testBut = document.getElementById("test")
+// testBut.addEventListener("click", sendOtherMessage)
+// function sendOtherMessage() {
+//     window.messages.push({name: "Susu", message: "How about this?"})
+//     displayMessage("how about this?", "Susu", "message other");
+//     handleNewMessageNotif();
+// }
 
 let notif = document.getElementById("newMessageNotif")
-function sendOtherMessage() {
-    displayMessage("how about this?", "Susu", "message other");
-    handleNewMessageNotif();
-
-}
-
 chatWindow.addEventListener("scroll", hideNotifIfScrolled)
 function handleNewMessageNotif() {
     if (chatWindow.scrollTop + chatWindow.clientHeight < chatWindow.scrollHeight) {
