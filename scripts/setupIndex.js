@@ -8,7 +8,7 @@ let nameInp = document.getElementById("name");
 function joinRoom() {
     if (nameInp.value.trim() != "") {
         window.name = nameInp.value.trim();
-        window.location.href = "chat.html";
+        window.location.href = `chat.html?name=${encodeURIComponent(window.name.trim())}`;
     }
     else {
         alert("Enter your name and room code first!");

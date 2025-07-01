@@ -5,14 +5,14 @@ let statusIndicator = document.getElementById("statusIndicator");
 pc.onconnectionstatechange = () => {
     console.log(pc.connectionState);
     if (pc.connectionState == "connecting") {
-        statusIndicator.style.backgroundColor = "rgb(225, 207, 91)";
+        statusIndicator.style.backgroundColor = "#e1cf5b";
     }
     else if (pc.connectionState == "connected") {
-        statusIndicator.style.backgroundColor = "rgb(148, 211, 80)";
+        statusIndicator.style.backgroundColor = "#94d350";
 
     }
     else {
-        statusIndicator.style.backgroundColor = "rgb(92, 92, 92)";
+        statusIndicator.style.backgroundColor = "#5c5c5c";
     }
 }
 
@@ -34,7 +34,9 @@ function handleMessage() {
 }
 
 function sendToPeer(message) {
-    chatChannel.send(message);
+    if (chatChannel) {
+        chatChannel.send(message);
+    }
 }
 
 // offerer
