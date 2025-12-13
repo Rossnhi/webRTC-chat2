@@ -3,7 +3,8 @@ let roomRef = db.collection("rooms").doc(window.chatData.room);
 async function handleSignalling() {
     if(window.chatData.hosting) {
         roomRef.set({
-            hostName : window.chatData.name
+            hostName : window.chatData.name,
+            hostID : window.chatData.id
         });
         roomRef.onSnapshot(async (doc) => {
             let roomData = doc.data();
@@ -42,7 +43,7 @@ async function handleSignalling() {
         }
     }
 }
-handleSignalling();
+// handleSignalling();
 
 
 

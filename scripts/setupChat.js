@@ -15,7 +15,11 @@ window.chatData = {name: params.get("name"), messages : [
         "message": "How are you??",
         "timeStamp": "02:38 PM"
     }
-], room : params.get("room"), hosting: params.get("hosting") == "true" ? true : false};
+], 
+room : params.get("room"),
+hosting: params.get("hosting") == "true" ? true : false,
+id : crypto.randomUUID()
+};
 
 const firebaseConfig = {
     apiKey: "AIzaSyCowiq8v6aQnSFBr5c0jQHu1ncA4DEjpCU",
