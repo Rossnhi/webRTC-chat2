@@ -14,33 +14,46 @@ pc.onconnectionstatechange = () => {
         statusIndicator.style.backgroundColor = "#e1cf5b";
     }
     else if (pc.connectionState == "connected") {
-        statusIndicator.style.backgroundColor = "#94d350";
-
+        statusIndicator.style.backgroundColor = "#90c417ff";
     }
     else {
         statusIndicator.style.backgroundColor = "#5c5c5c";
     }
 }
 
-let iceNo = 1;
-pc.onicecandidate = (e) => {
-    console.log(`#${iceNo} candidate`);
-    iceNo += 1;
-    if (e.candidate == null) {
-        console.log("Ice gathering completed!");
-        // signal
-    }
+function gatherIce() {
+    return new Promise((resolve) => {
+        if (pc.iceGatheringState == "complete") {
+            resolve();
+        }
+        else {
+            pc.addEventListener("icegatheringstatechange", function onIceStateChange() {
+                if (pc.iceGatheringState == "complete") {
+                    pc.removeEventListener("icegatheringstatechange", onIceStateChange);
+                    resolve();
+                }
+            });
+        }
+    });
 }
 
-
 // Manual signalling
-let copyCodeBut = document.getElementById("copyCode");
-copyCodeBut.addEventListener("click", (e) => {
-    let text = JSON.stringify(JSON.stringify(pc.localDescription));
-        navigator.clipboard.writeText(text)
-            .then(() => console.log("Copied to clipboard:", text))
-            .catch(err => console.error("Clipboard error:", err));
-})
+// let iceNo = 1;
+// pc.onicecandidate = (e) => {
+//     console.log(`#${iceNo} candidate`);
+//     iceNo += 1;
+//     if (e.candidate == null) {
+//         console.log("Ice gathering completed!");
+//         // signal
+//     }
+// }
+// let copyCodeBut = document.getElementById("copyCode");
+// copyCodeBut.addEventListener("click", (e) => {
+//     let text = JSON.stringify(JSON.stringify(pc.localDescription));
+//         navigator.clipboard.writeText(text)
+//             .then(() => console.log("Copied to clipboard:", text))
+//             .catch(err => console.error("Clipboard error:", err));
+// })
 
 let chatChannel;
 
@@ -66,6 +79,9 @@ async function generateOffer() {
 
     const offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
+
+    await gatherIce();
+    return pc.localDescription;
 }
 
 function recieveAnswer(ans) {
@@ -83,4 +99,7 @@ async function generateAnswer(offer) {
     pc.setRemoteDescription(JSON.parse(offer));
     const answer = await pc.createAnswer();
     await pc.setLocalDescription(answer);
+
+    await gatherIce();
+    return pc.localDescription;
 }
