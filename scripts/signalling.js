@@ -3,15 +3,34 @@ let roomRef = db.collection("rooms").doc(window.chatData.room);
 async function handleSignalling() {
     if(window.chatData.hosting) {
         roomRef.set({
-            status : "offer pending",
+            hostName : window.chatData.name
         });
-
-        roomRef.update({
-            status : "offered",
-            offer : JSON.stringify(await generateOffer())
-        });
-
         roomRef.onSnapshot(async (doc) => {
+            let roomData = doc.data();
+            if(roomData.status == "offered") {
+                roomRef.update({
+                    status : "answered",
+                    answer : JSON.stringify(await generateAnswer(roomData.offer))
+                });
+            }
+        });
+    }
+    else {
+        const docSnap = await roomRef.get();
+        if(!docSnap.exists) {
+            alert("Room does not exist. Please enter a valid room ID.");
+            window.location.href = "index.html";
+        }else {
+            roomRef.update({
+                status : "offer pending",
+            });
+
+            roomRef.update({
+                status : "offered",
+                offer : JSON.stringify(await generateOffer())
+            });
+
+            roomRef.onSnapshot(async (doc) => {
                 let roomData = doc.data();
                 if(roomData.status == "answered") {
                     recieveAnswer(roomData.answer);
@@ -20,26 +39,10 @@ async function handleSignalling() {
                     });
                 }
             });
-    }
-    else {
-        const docSnap = await roomRef.get();
-        if(!docSnap.exists) {
-            alert("Room does not exist. Please enter a valid room ID.");
-            window.location.href = "index.html";
-        }else {
-            roomRef.onSnapshot(async (doc) => {
-                let roomData = doc.data();
-                if(roomData.status == "offered") {
-                    roomRef.update({
-                        status : "answered",
-                        answer : JSON.stringify(await generateAnswer(roomData.offer))
-                    });
-                }
-            });
         }
     }
 }
-// handleSignalling();
+handleSignalling();
 
 
 
