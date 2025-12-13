@@ -1,5 +1,5 @@
 const params = new URLSearchParams(window.location.search);
-window.chatData = {name: params.get("name"),messages : []};
+window.chatData = {name: params.get("name"), messages : []};
 
 const firebaseConfig = {
     apiKey: "AIzaSyCowiq8v6aQnSFBr5c0jQHu1ncA4DEjpCU",
@@ -11,5 +11,3 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
