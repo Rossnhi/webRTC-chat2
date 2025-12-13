@@ -2,6 +2,9 @@ let form = document.getElementById('chatForm');
 let messageBox = document.getElementById("messageBox");
 form.addEventListener("submit", sendMessage);
 
+let roomID = document.getElementById("roomID");
+roomID.innerText = `Room ID : ${window.chatData.room}`;
+
 let chatWindow = document.getElementById("chatWindow")
 
 function sendMessage(e) {
