@@ -1,18 +1,21 @@
 :root {
-    --primary-color-1 : #5d1e1e;
-    --primary-color-2 : #722323;
-    --secondary-color : #FFECCC;;
-    --accent-color-1 : #BA487F;
-    --accent-color-2 : #FF9587;
+    --primary-color-1 : #89d3ee;
+    --primary-color-2 : #FACE68;
+    --secondary-color : #2b608b;
+    --accent-color-1 : #FF9587;
+    --accent-color-2 : #BA487F;
 }
 
 * {
     text-align: center;
-    font-family: "Special Elite", system-ui;
+    font-family: "Amatic SC", sans-serif;
+    font-weight: bold;
     color: var(--secondary-color);
     box-sizing: border-box;
     vertical-align: top;
 }
+
+
 
 body {
     background-color: var(--primary-color-1);
@@ -32,7 +35,7 @@ button {
     background-color: var(--accent-color-1);
     border: 1px solid  var(--accent-color-2);
     border-radius: 10px;
-    font-size: 26px;
+    font-size: 30px;
 }
 
 button:hover {
@@ -52,7 +55,7 @@ input {
     background-color: var(--primary-color-2);
     border-radius: 10px;
     border: 1px solid var(--accent-color-2);
-    font-size: 20px;
+    font-size: 22px;
 }
 
 #messageBox {
@@ -70,19 +73,33 @@ input:focus {
     min-height: 300px;
     max-height: 500px;
     position: relative;
-    overflow: scroll;
+    overflow: auto;
+}
+
+#chatWindow::-webkit-scrollbar {
+    background-color: var(--primary-color-2);
+    width: 10px;
+    border-radius: 10px;
+}
+
+#chatWindow::-webkit-scrollbar-thumb {
+    background-color: var(--secondary-color);
+    border-radius: 5px;
 }
 
 .message {
     list-style: none;
     width: fit-content;
     min-width: 150px;
-    height: 45px;
+    min-height: 45px;
+    max-width: 80%;
     padding: 10px;
     margin: 10px 0px;
     border: 1px solid var(--accent-color-2);
     border-radius: 10px;
     text-align: left;
+    font-size: 25px;
+    font-weight: bold;
     position: relative;
 }
 
@@ -120,8 +137,12 @@ input:focus {
     }
 }
 
-.sender {
+.self .sender {
     color: var(--accent-color-1);
+    margin: 0px 5px;
+}
+.other .sender {
+    color: var(--accent-color-2);
     margin: 0px 5px;
 }
 
@@ -132,6 +153,10 @@ input:focus {
     bottom: 0px;
     margin-bottom: 0px;
     font-size: 13px;
+}
+
+.other .timeStamp {
+    color: var(--accent-color-2);
 }
 
 #newMessageNotif {
@@ -151,7 +176,7 @@ input:focus {
 .container {
     width: 330px;
     background-color: #fff3;
-    padding: 20px;
+    padding: 20px 0px 0px 0px;
     border-radius: 20px;
     position: fixed;
     top: 50%;
@@ -164,8 +189,15 @@ input:focus {
     margin: 10px;
 }
 
-.container p {
+.subContainer {
+    background-color: #fff3;
+    border-radius: 10px;
+    margin: 20px;
+}
+
+.subContainer p {
     color: var(--accent-color-2);
+    margin: auto 10px auto 10px;
     font-size: 33px;
 }
 
