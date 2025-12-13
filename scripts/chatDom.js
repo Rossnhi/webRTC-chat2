@@ -7,32 +7,33 @@ let chatWindow = document.getElementById("chatWindow")
 function sendMessage(e) {
     e.preventDefault(); // Prevent page reload
     if (messageBox.value.trim() != "") {
-        let message = {name: window.chatData.name, message: messageBox.value};
+        let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true});
+        let message = {name: window.chatData.name, message: messageBox.value, timeStamp : time};
         window.chatData.messages.push(message);
-        displayMessage(message.message, message.name, "message self");
+        displayMessage(message, "message self");
         sendToPeer(JSON.stringify(message));
     }
     messageBox.value = "";
     chatWindow.scrollTop = chatWindow.scrollHeight
 }
 
-function displayMessage(message, name,  style) {
-    let t = document.createTextNode(message);
+function displayMessage(message, style) {
+    let t = document.createTextNode(message.message);
     let li = document.createElement("li");
-    let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true});
-    li.innerHTML = `<span class="sender">${name}: </span><span class="timeStamp">${time}</span>`
+    li.innerHTML = `<span class="sender">${message.name}: </span><span class="timeStamp">${message.timeStamp}</span>`
     li.appendChild(t);
-
     li.className = style
     chatWindow.appendChild(li);
 }
 
+// Other Message Test
 // chatWindow.innerHTML += "<button id='test'>test</button>"
 // let testBut = document.getElementById("test")
 // testBut.addEventListener("click", sendOtherMessage)
 // function sendOtherMessage() {
-//     window.messages.push({name: "Susu", message: "How about this?"})
-//     displayMessage("how about this?", "Susu", "message other");
+//     let message = {name: "Susu", message: "How about this?", timeStamp : "02:34pm"};
+//     window.chatData.messages.push(message)
+//     displayMessage(message, "message other");
 //     handleNewMessageNotif();
 // }
 
