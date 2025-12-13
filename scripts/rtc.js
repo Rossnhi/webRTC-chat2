@@ -1,4 +1,10 @@
-const configuration = {iceServers : [{urls : "stun:stun.l.google.com:19302"}]};
+const configuration = {
+    iceServers: [
+        { urls: "stun:stun.l.google.com:19302" },
+        { urls: "stun:stun1.l.google.com:19302" },
+        { urls: "stun:stun2.l.google.com:19302" }
+    ]
+};
 const pc = new RTCPeerConnection(configuration);
 
 let statusIndicator = document.getElementById("statusIndicator");
@@ -16,19 +22,33 @@ pc.onconnectionstatechange = () => {
     }
 }
 
+let iceNo = 1;
 pc.onicecandidate = (e) => {
+    console.log(`#${iceNo} candidate`);
+    iceNo += 1;
     if (e.candidate == null) {
-        console.log(JSON.stringify(JSON.stringify(pc.localDescription)));
+        console.log("Ice gathering completed!");
+        // signal
     }
 }
+
+
+// Manual signalling
+let copyCodeBut = document.getElementById("copyCode");
+copyCodeBut.addEventListener("click", (e) => {
+    let text = JSON.stringify(JSON.stringify(pc.localDescription));
+        navigator.clipboard.writeText(text)
+            .then(() => console.log("Copied to clipboard:", text))
+            .catch(err => console.error("Clipboard error:", err));
+})
 
 let chatChannel;
 
 function handleMessage() {
     chatChannel.onmessage = (e) => {
-        let data = JSON.parse(e.data);
-        window.messages.push({name: data.name, message: data.message})
-        displayMessage(data.message, data.name, "message other");
+        let messageData = JSON.parse(e.data);
+        window.chatData.messages.push(messageData)
+        displayMessage(messageData, "message other");
         handleNewMessageNotif();
     }
 }
