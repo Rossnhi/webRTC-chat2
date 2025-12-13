@@ -1,5 +1,21 @@
 const params = new URLSearchParams(window.location.search);
-window.chatData = {name: params.get("name"), messages : []};
+window.chatData = {name: params.get("name"), messages : [
+    {
+        "name": "Roro",
+        "message": "hiii",
+        "timeStamp": "02:34 PM"
+    },
+    {
+        "name": "Boro",
+        "message": "helloooo",
+        "timeStamp": "02:36 PM"
+    },
+    {
+        "name": "Zoro",
+        "message": "How are you??",
+        "timeStamp": "02:38 PM"
+    }
+], room : params.get("room"), hosting: params.get("hosting") == "true" ? true : false};
 
 const firebaseConfig = {
     apiKey: "AIzaSyCowiq8v6aQnSFBr5c0jQHu1ncA4DEjpCU",
