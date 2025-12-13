@@ -10,19 +10,26 @@ function sendMessage(e) {
         let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true});
         let message = {name: window.chatData.name, message: messageBox.value, timeStamp : time};
         window.chatData.messages.push(message);
-        displayMessage(message, "message self");
+        displayMessage(message);
         sendToPeer(JSON.stringify(message));
     }
     messageBox.value = "";
     chatWindow.scrollTop = chatWindow.scrollHeight
 }
 
-function displayMessage(message, style) {
+function displayMessage(message) {
     let t = document.createTextNode(message.message);
     let li = document.createElement("li");
     li.innerHTML = `<span class="sender">${message.name}: </span><span class="timeStamp">${message.timeStamp}</span>`
     li.appendChild(t);
-    li.className = style
+    let style;
+    if (message.name == window.chatData.name) {
+        style = "message self"
+    }
+    else {
+        style = "message other"
+    }
+    li.className = style;
     chatWindow.appendChild(li);
 }
 
@@ -33,7 +40,7 @@ function displayMessage(message, style) {
 // function sendOtherMessage() {
 //     let message = {name: "Susu", message: "How about this?", timeStamp : "02:34pm"};
 //     window.chatData.messages.push(message)
-//     displayMessage(message, "message other");
+//     displayMessage(message);
 //     handleNewMessageNotif();
 // }
 
@@ -52,4 +59,8 @@ function hideNotifIfScrolled() {
     if (chatWindow.scrollTop + chatWindow.clientHeight >= chatWindow.scrollHeight) {
         notif.style.transform = "scale(0)";
     }
+}
+
+for (let message of window.chatData.messages) {
+    displayMessage(message);
 }
