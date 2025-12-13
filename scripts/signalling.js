@@ -1,55 +1,45 @@
 const db = firebase.firestore();
-console.log(window.chatData);
-
-
-let myData; // a local copy of the data on firebase to keep track of changes
 let roomRef = db.collection("rooms").doc(window.chatData.room);
-if( window.chatData.hosting) {
-   myData = {
-       host : window.chatData.name,
-       members : [],
-   };
-   roomRef.set(myData);
+async function handleSignalling() {
+    if(window.chatData.hosting) {
+        roomRef.set({
+            status : "offer pending",
+        });
 
+        roomRef.update({
+            status : "offered",
+            offer : JSON.stringify(await generateOffer())
+        });
 
-   myData.connections = [];
-   roomRef.onSnapshot((room) => {
-       let roomData = room.data();
-       roomData.members.forEach(async member => {
-           if (!myData.members.includes(member)) {
-               let newOffer = await generateOffer();
-               roomRef.collection("connections").doc(member).set({
-                   status : "offered",
-                   offer : newOffer
-               })
-               myData.members.push(member);
-               myData.connections.push({[member] : {
-                   status : "offered",
-                   offer : newOffer
-               }});
-           }
-       });
-   });
+        roomRef.onSnapshot(async (doc) => {
+                let roomData = doc.data();
+                if(roomData.status == "answered") {
+                    recieveAnswer(roomData.answer);
+                    roomRef.update({
+                        status : "connected",
+                    });
+                }
+            });
+    }
+    else {
+        const docSnap = await roomRef.get();
+        if(!docSnap.exists) {
+            alert("Room does not exist. Please enter a valid room ID.");
+            window.location.href = "index.html";
+        }else {
+            roomRef.onSnapshot(async (doc) => {
+                let roomData = doc.data();
+                if(roomData.status == "offered") {
+                    roomRef.update({
+                        status : "answered",
+                        answer : JSON.stringify(await generateAnswer(roomData.offer))
+                    });
+                }
+            });
+        }
+    }
 }
-
-
-else {
-   joinDataInit();
-}
-
-
-async function joinDataInit() {
-   myData = await roomRef.get()
-   myData = await myData.data();
-   myData.members.push(window.chatData.name);
-   roomRef.update(myData);
-  
-   roomRef.onSnapshot((room) => {
-      
-   });
-
-
-}
+// handleSignalling();
 
 
 
@@ -58,19 +48,29 @@ async function joinDataInit() {
 
 
 
-// let rooms = {
-//     XHJD : {
-//         host : "Roro",
-//         members : ["Susu"],
-//         docSusu: {
-//             status : "answered", // offered/answered/connected
-//             offer : "jgj",
-//             answer: "hfy"
-//         }
-//     },
-//     GHKU : {
 
 
-//     }
+// if(window.chatData.hosting) {
+//     db.collection("rooms").doc("ABCD").set({
+//         'key1' : 'value1',
+//         'key2' : 'value2'
+//     });
+
+//     // db.collection("rooms").add({
+//     //     'key1' : 'value1'
+//     // });
+
+//     db.collection("rooms").doc("ABCD").update({
+//         'key2' : 'changed',
+//         'key3' : 'value3'
+//     });
+
+//     db.collection("rooms").doc("ABCD").collection("members").add({
+//         name : 'zoro'
+//     });
+
+//     db.collection("rooms").doc("ABCD").get().then( (doc) => {
+//         console.log(doc.data());
+//     });
+    
 // }
-
