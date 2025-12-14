@@ -9,12 +9,24 @@ const configuration = {
     ]
 };
 class Connection {
-    constructor(id) {
-        this.id = id;
+    constructor(peerId, peerName) {
+        // connection status indicator
+        let sidebar = document.getElementById("sidebar");
+        let peerStatus = document.createElement("li");
+        this.statusIndicator = document.createElement("div");
+        this.statusIndicator.classList.add("statusIndicator");
+        peerStatus.appendChild(this.statusIndicator);
+        let text = document.createTextNode(peerName);
+        peerStatus.appendChild(text);
+        sidebar.appendChild(peerStatus);
+
+        this.id = peerId;
         this.pc = new RTCPeerConnection(configuration);
-        this.statusIndicator = document.getElementById("statusIndicator");
         this.pc.onconnectionstatechange = () => {
             console.log(this.pc.connectionState);
+            peersRef.doc(this.id).update({
+                connectionState: this.pc.connectionState
+            });
             if (this.pc.connectionState == "connecting") {
                 this.statusIndicator.style.backgroundColor = "#e1cf5b";
             }
@@ -25,14 +37,22 @@ class Connection {
                 this.statusIndicator.style.backgroundColor = "#5c5c5c";
             }
         }
+        this.chatChannel;
         // answerer
         this.pc.ondatachannel = (e) => {
             if (e.channel.label == "chat") {
                 this.chatChannel = e.channel;
                 this.handleMessage();
             }
+
+            this.chatChannel.onopen = () => {
+                if (window.chatData.hosting) {
+                    for (let message of window.chatData.messages) {
+                        this.chatChannel.send(JSON.stringify(message));
+                    }
+                }
+            };
         }
-        this.chatChannel;
     }
 
     gatherIce() {
@@ -59,7 +79,7 @@ class Connection {
             handleNewMessageNotif();
             if (window.chatData.hosting) {
                 for (let connectionKey in connections) {
-                    if(connectionKey != this.id) {
+                    if (connectionKey != this.id) {
                         connections[connectionKey].sendToPeer(JSON.stringify(message));
                     }
                 }
