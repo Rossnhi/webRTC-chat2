@@ -14,7 +14,7 @@ function sendMessage(e) {
         let message = {name: window.chatData.name, message: messageBox.value, timeStamp : time};
         window.chatData.messages.push(message);
         displayMessage(message);
-        sendToPeer(JSON.stringify(message));
+        connection.sendToPeer(JSON.stringify(message));
     }
     messageBox.value = "";
     chatWindow.scrollTop = chatWindow.scrollHeight

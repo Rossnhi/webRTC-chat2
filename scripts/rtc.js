@@ -1,3 +1,6 @@
+let connection;
+let connections;
+
 const configuration = {
     iceServers: [
         { urls: "stun:stun.l.google.com:19302" },
@@ -5,101 +8,87 @@ const configuration = {
         { urls: "stun:stun2.l.google.com:19302" }
     ]
 };
-const pc = new RTCPeerConnection(configuration);
-
-let statusIndicator = document.getElementById("statusIndicator");
-pc.onconnectionstatechange = () => {
-    console.log(pc.connectionState);
-    if (pc.connectionState == "connecting") {
-        statusIndicator.style.backgroundColor = "#e1cf5b";
-    }
-    else if (pc.connectionState == "connected") {
-        statusIndicator.style.backgroundColor = "#90c417ff";
-    }
-    else {
-        statusIndicator.style.backgroundColor = "#5c5c5c";
-    }
-}
-
-function gatherIce() {
-    return new Promise((resolve) => {
-        if (pc.iceGatheringState == "complete") {
-            resolve();
+class Connection {
+    constructor() {
+        this.pc = new RTCPeerConnection(configuration);
+        this.statusIndicator = document.getElementById("statusIndicator");
+        this.pc.onconnectionstatechange = () => {
+            console.log(this.pc.connectionState);
+            if (this.pc.connectionState == "connecting") {
+                this.statusIndicator.style.backgroundColor = "#e1cf5b";
+            }
+            else if (this.pc.connectionState == "connected") {
+                this.statusIndicator.style.backgroundColor = "#90c417ff";
+            }
+            else {
+                this.statusIndicator.style.backgroundColor = "#5c5c5c";
+            }
         }
-        else {
-            pc.addEventListener("icegatheringstatechange", function onIceStateChange() {
-                if (pc.iceGatheringState == "complete") {
-                    pc.removeEventListener("icegatheringstatechange", onIceStateChange);
-                    resolve();
-                }
-            });
+        // answerer
+        this.pc.ondatachannel = (e) => {
+            if (e.channel.label == "chat") {
+                this.chatChannel = e.channel;
+                this.handleMessage();
+            }
         }
-    });
-}
-
-// Manual signalling
-// let iceNo = 1;
-// pc.onicecandidate = (e) => {
-//     console.log(`#${iceNo} candidate`);
-//     iceNo += 1;
-//     if (e.candidate == null) {
-//         console.log("Ice gathering completed!");
-//         // signal
-//     }
-// }
-// let copyCodeBut = document.getElementById("copyCode");
-// copyCodeBut.addEventListener("click", (e) => {
-//     let text = JSON.stringify(JSON.stringify(pc.localDescription));
-//         navigator.clipboard.writeText(text)
-//             .then(() => console.log("Copied to clipboard:", text))
-//             .catch(err => console.error("Clipboard error:", err));
-// })
-
-let chatChannel;
-
-function handleMessage() {
-    chatChannel.onmessage = (e) => {
-        let messageData = JSON.parse(e.data);
-        window.chatData.messages.push(messageData)
-        displayMessage(messageData, "message other");
-        handleNewMessageNotif();
+        this.chatChannel;
     }
-}
 
-function sendToPeer(message) {
-    if (chatChannel) {
-        chatChannel.send(message);
+    gatherIce() {
+        return new Promise((resolve) => {
+            if (this.pc.iceGatheringState == "complete") {
+                resolve();
+            }
+            else {
+                this.pc.addEventListener("icegatheringstatechange", function onIceStateChange() {
+                    if (this.iceGatheringState == "complete") {
+                        this.removeEventListener("icegatheringstatechange", onIceStateChange);
+                        resolve();
+                    }
+                });
+            }
+        });
     }
-}
 
-// offerer
-async function generateOffer() {
-    chatChannel = pc.createDataChannel("chat");
-    handleMessage();
-
-    const offer = await pc.createOffer();
-    await pc.setLocalDescription(offer);
-
-    await gatherIce();
-    return pc.localDescription;
-}
-
-function recieveAnswer(ans) {
-    pc.setRemoteDescription(JSON.parse(ans));
-}
-
-// answerer
-pc.ondatachannel = (e) => {
-    if(e.channel.label == "chat") {
-        chatChannel = e.channel;
-        handleMessage();
+    handleMessage() {
+        this.chatChannel.onmessage = (e) => {
+            let messageData = JSON.parse(e.data);
+            window.chatData.messages.push(messageData)
+            displayMessage(messageData, "message other");
+            handleNewMessageNotif();
+        }
     }
-}
-async function generateAnswer(offer) {
-    pc.setRemoteDescription(JSON.parse(offer));
-    const answer = await pc.createAnswer();
-    await pc.setLocalDescription(answer);
 
-    await gatherIce();
-    return pc.localDescription;
+    sendToPeer(message) {
+        if (this.chatChannel) {
+            this.chatChannel.send(message);
+        }
+    }
+
+    // offerer
+    async generateOffer() {
+        this.chatChannel = this.pc.createDataChannel("chat");
+        this.handleMessage();
+        // pingChannel = pc.createDataChannel("ping", { ordered: false, maxRetransmits: 0 });
+        //handlePing();
+
+        const offer = await this.pc.createOffer();
+        await this.pc.setLocalDescription(offer);
+
+        await this.gatherIce();
+        return this.pc.localDescription;
+    }
+
+    recieveAnswer(ans) {
+        this.pc.setRemoteDescription(JSON.parse(ans));
+    }
+
+    async generateAnswer(offer) {
+        this.pc.setRemoteDescription(JSON.parse(offer));
+        const answer = await this.pc.createAnswer();
+        await this.pc.setLocalDescription(answer);
+
+        await this.gatherIce();
+        return this.pc.localDescription;
+    }
 }

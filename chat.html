@@ -13,20 +13,29 @@
 </head>
 <body>
     <h1>Chat</h1>
-    <div id="statusIndicator"></div>
     <span id="roomID"></span>
-    <ul id = "chatWindow">
-        <li id = "newMessageNotif">&#9660;</li>
-    </ul>
-    <form id="chatForm">
-        <input type="text" id="messageBox" placeholder="Enter message..." autocomplete="off">
-        <button type="submit">Send</button>
-    </form>
+    <div id="chatContainer">
+        <ul id="sidebar" class="chatChild">
+            <li><div id="statusIndicator" class="statusIndicator"></div>peer1</li>
+            <li><div class="statusIndicator"></div>peer2</li>
+            <li><div class="statusIndicator"></div>peer3</li>
+        </ul>
+        <div class="chatChild" id="chat">
+            <ul id = "chatWindow">
+                <li id = "newMessageNotif">&#9660;</li>
+            </ul>
+            <form id="chatForm">
+                <input type="text" id="messageBox" placeholder="Enter message..." autocomplete="off">
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+    
     <!-- <button id="copyCode">Copy Code</button> -->
 
     <script src = "scripts/setupChat.js"></script>
-    <script src = "scripts/chatDom.js" ></script>
     <script src = "scripts/rtc.js"></script>
     <script src = "scripts/signalling.js"></script>
+    <script src = "scripts/chatDom.js" ></script>
 </body>
 </html>
