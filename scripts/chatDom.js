@@ -5,6 +5,9 @@ form.addEventListener("submit", sendMessage);
 let roomID = document.getElementById("roomID");
 roomID.innerText = `Room ID : ${window.chatData.room}`;
 
+let myName = document.getElementById("myName");
+myName.innerText = `Name: ${window.chatData.name}`;
+
 let chatWindow = document.getElementById("chatWindow")
 
 function sendMessage(e) {

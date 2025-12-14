@@ -209,13 +209,21 @@ input:focus {
 }
 
 
-#roomID {
+#roomID, #myName, #hostName {
     position: absolute;
     top: 80px;
     right: 100px;
     color: var(--secondary-color);
     font-size: 25px;
     font-weight: bold;
+}
+
+#myName {
+    top: 50px;
+}
+
+#hostName {
+    top: 110px;
 }
 
 .container {
