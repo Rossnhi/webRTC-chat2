@@ -10,11 +10,19 @@ let chatWindow = document.getElementById("chatWindow")
 function sendMessage(e) {
     e.preventDefault(); // Prevent page reload
     if (messageBox.value.trim() != "") {
-        let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true});
-        let message = {name: window.chatData.name, message: messageBox.value, timeStamp : time};
+        let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+        let message = { name: window.chatData.name, message: messageBox.value, timeStamp: time };
         window.chatData.messages.push(message);
         displayMessage(message);
-        connection.sendToPeer(JSON.stringify(message));
+        if (window.chatData.hosting) {
+            for (let connectionKey in connections) {
+                connections[connectionKey].sendToPeer(JSON.stringify(message));
+            }
+        }
+        else {
+            connection.sendToPeer(JSON.stringify(message));
+        }
+
     }
     messageBox.value = "";
     chatWindow.scrollTop = chatWindow.scrollHeight

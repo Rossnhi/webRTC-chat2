@@ -1,24 +1,9 @@
 const params = new URLSearchParams(window.location.search);
-window.chatData = {name: params.get("name"), messages : [
-    {
-        "name": "Roro",
-        "message": "hiii",
-        "timeStamp": "02:34 PM"
-    },
-    {
-        "name": "Boro",
-        "message": "helloooo",
-        "timeStamp": "02:36 PM"
-    },
-    {
-        "name": "Zoro",
-        "message": "How are you??",
-        "timeStamp": "02:38 PM"
-    }
-], 
-room : params.get("room"),
-hosting: params.get("hosting") == "true" ? true : false,
-id : crypto.randomUUID()
+window.chatData = {name: params.get("name"),
+    messages : [], 
+    room : params.get("room"),
+    hosting: params.get("hosting") == "true" ? true : false,
+    id : crypto.randomUUID()
 };
 
 const firebaseConfig = {

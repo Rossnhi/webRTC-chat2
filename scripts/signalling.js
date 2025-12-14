@@ -1,63 +1,73 @@
 const db = firebase.firestore();
 let roomRef = db.collection("rooms").doc(window.chatData.room);
-// const peersRef = roomRef.collection("peers");
+const peersRef = roomRef.collection("peers");
 
 async function handleSignalling() {
     if(window.chatData.hosting) {
-        connection = new Connection();
         roomRef.set({
             hostName : window.chatData.name,
             hostID : window.chatData.id,
         });
 
-        // peersRef.onSnapshot((snapshot) => {
-        //     snapshot.docChanges().forEach((change) => {
-        //         const peerData = change.doc.data();
-        //         const peerId = change.doc.id;
+        peersRef.onSnapshot(async (snapshot) => {
+            for (const change of snapshot.docChanges()) {
+                const peerData = change.doc.data();
+                const peerId = change.doc.id;
 
-        //         if (change.type === "added") {
-        //             console.log(`New peer joined: ${peerId}`, peerData);
-        //         }
-        //         else if (change.type === "modified") {
-        //             console.log(`Peer updated: ${peerId}`, peerData);
-        //         }
-        //         else if (change.type === "removed") {
-        //             console.log(`Peer left: ${peerId}`);
-        //         }
-        //     });
-        // });
-
-        roomRef.onSnapshot(async (doc) => {
-            let roomData = doc.data();
-            if(roomData.status == "offered") {
-                roomRef.update({
-                    status : "answered",
-                    answer : JSON.stringify(await connection.generateAnswer(roomData.offer))
-                });
-            }
+                if (change.type === "added") {
+                    connections[peerId] = new Connection(peerId);
+                }
+                else if (change.type === "modified") {
+                    if (!connections[peerId]) {
+                        connections[peerId] = new Connection(peerID);
+                    }
+                    if(peerData.status == "offered" && !peerData.answer) {
+                        change.doc.ref.update({
+                            status : "answered",
+                            answer : JSON.stringify(await connections[peerId].generateAnswer(peerData.offer))
+                        });
+                    }
+                }
+                // else if (change.type === "removed") {
+                //     console.log(`Peer left: ${peerId}`);
+                // }
+            };
         });
+
+        // roomRef.onSnapshot(async (doc) => {
+        //     let roomData = doc.data();
+        //     if(roomData.status == "offered") {
+        //         roomRef.update({
+        //             status : "answered",
+        //             answer : JSON.stringify(await connection.generateAnswer(roomData.offer))
+        //         });
+        //     }
+        // });
     }
     else {
-        connection = new Connection();
         const docSnap = await roomRef.get();
         if(!docSnap.exists) {
             alert("Room does not exist. Please enter a valid room ID.");
             window.location.href = "index.html";
         }else {
-            roomRef.update({
+            connection = new Connection(window.chatData.id);
+            const peerRef = peersRef.doc(window.chatData.id);
+
+            peerRef.set({
+                name : window.chatData.name,
                 status : "offer pending",
             });
 
-            roomRef.update({
+            peerRef.update({
                 status : "offered",
                 offer : JSON.stringify(await connection.generateOffer())
             });
 
-            roomRef.onSnapshot(async (doc) => {
-                let roomData = doc.data();
-                if(roomData.status == "answered") {
-                    connection.recieveAnswer(roomData.answer);
-                    roomRef.update({
+            peerRef.onSnapshot(async (doc) => {
+                let peerData = doc.data();
+                if(peerData.status == "answered") {
+                    connection.recieveAnswer(peerData.answer);
+                    peerRef.update({
                         status : "connected",
                     });
                 }

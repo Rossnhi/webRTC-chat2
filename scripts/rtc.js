@@ -1,5 +1,5 @@
 let connection;
-let connections;
+let connections = {};
 
 const configuration = {
     iceServers: [
@@ -9,7 +9,8 @@ const configuration = {
     ]
 };
 class Connection {
-    constructor() {
+    constructor(id) {
+        this.id = id;
         this.pc = new RTCPeerConnection(configuration);
         this.statusIndicator = document.getElementById("statusIndicator");
         this.pc.onconnectionstatechange = () => {
@@ -52,10 +53,17 @@ class Connection {
 
     handleMessage() {
         this.chatChannel.onmessage = (e) => {
-            let messageData = JSON.parse(e.data);
-            window.chatData.messages.push(messageData)
-            displayMessage(messageData, "message other");
+            let message = JSON.parse(e.data);
+            window.chatData.messages.push(message);
+            displayMessage(message, "message other");
             handleNewMessageNotif();
+            if (window.chatData.hosting) {
+                for (let connectionKey in connections) {
+                    if(connectionKey != this.id) {
+                        connections[connectionKey].sendToPeer(JSON.stringify(message));
+                    }
+                }
+            }
         }
     }
 
